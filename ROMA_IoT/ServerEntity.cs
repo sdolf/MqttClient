@@ -48,6 +48,11 @@ namespace MqttClient
                         X509Certificate2 caCrt = new X509Certificate2(File.ReadAllBytes(caCertificatePath));
                         rootCertificateTrust.AddCert(caCrt);
                         isTls = true;
+                        Logger.Debug($"trust CA certificate loaded from file: {caCertificatePath}");
+                    }
+                    else 
+                    {
+                        Logger.Warn($"trust CA certificate file not exist: {caCertificatePath}");
                     }
                 }
                 if (isTls) 

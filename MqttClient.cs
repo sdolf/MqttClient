@@ -42,7 +42,8 @@ namespace MqttClient
 
             //ssl相关配置：只有配置有服务端效证书时使用ssl连接
             rootCertificateTrust = server.CertificateTrust;
-            if (rootCertificateTrust != null) {
+            if (rootCertificateTrust != null)
+            {
                 //mqttClientOptionsbuilder.WithTlsOptions(
                 //    o =>
                 //    {
@@ -54,8 +55,6 @@ namespace MqttClient
                 //        // The default value is determined by the OS. Set manually to force version.
                 //        o.WithSslProtocols(SslProtocols.Tls12);
                 //        o.WithRevocationMode(X509RevocationMode.NoCheck);
-
-
                 //    });
                 mqttClientOptionsbuilder.WithTls(new MqttClientOptionsBuilderTlsParameters
                 {
@@ -65,6 +64,14 @@ namespace MqttClient
                     IgnoreCertificateRevocationErrors = true,
                     CertificateValidationHandler = rootCertificateTrust.VerifyServerCertificate,
                 });
+                Logger.Info("TLS enabled");
+            }
+            else {
+                if(server.CaCertificates != null && server.CaCertificates.Length>0)
+                {
+                    Logger.Warn("failed to load trust CA certificate from file");
+                }
+                Logger.Info("TLS disabled");
             }
         }
 
@@ -112,7 +119,7 @@ namespace MqttClient
                         finally
                         {
                             // Check the connection state every 5 seconds and perform a reconnect if required.
-                            Logger.Debug($"waiting for {client.ReconnectInterval} seconds ...");
+                            Logger.Debug($"waiting for {client.ReconnectInterval} seconds before next check  ...");
                             await Task.Delay(TimeSpan.FromSeconds(client.ReconnectInterval));
                         }
                     }
