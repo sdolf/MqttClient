@@ -22,7 +22,7 @@ namespace MqttClient
         // 客户端配置参数：连接超时、重连时间、日志级别等
         private readonly ClientEntity client=new ClientEntity();
         // mqtt客户端
-        private readonly MqttFactory mqttFactory = new MqttFactory();
+        private readonly MqttFactory mqttFactory;
         private readonly IMqttClient mqttClient;
         private readonly MqttClientOptionsBuilder mqttClientOptionsbuilder;
 
@@ -31,6 +31,16 @@ namespace MqttClient
         private readonly RootCertificateTrust rootCertificateTrust;
 
         public MqttClient() {
+            if (Logger.getEventLogger() != null)
+            {
+                mqttFactory = new MqttFactory(Logger.getEventLogger());
+                Logger.Info("debug mode enabled");
+            }
+            else
+            {
+                mqttFactory = new MqttFactory();
+                Logger.Info("debug mode disabled");
+            }
             mqttClient = mqttFactory.CreateMqttClient();
             mqttClient.ApplicationMessageReceivedAsync += ProcessMessage;
             mqttClientOptionsbuilder = new MqttClientOptionsBuilder()
