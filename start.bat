@@ -1,0 +1,1 @@
+MqttClient.exe >> log.txt

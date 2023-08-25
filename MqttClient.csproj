@@ -63,6 +63,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="start.bat" />
     <None Include="TLS\config.ini" />
     <None Include="TLS\Huawei BPIT Root CA.crt" />
     <None Include="TLS\Huawei IT Root CA.crt" />
@@ -73,6 +74,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy $(ProjectDir)TLS\*.crt $(TargetDir)
+copy $(ProjectDir)*.bat $(TargetDir)
 if not exist $(TargetDir)config.ini ( copy $(ProjectDir)TLS\config.ini $(TargetDir) )</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

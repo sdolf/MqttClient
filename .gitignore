@@ -296,3 +296,5 @@ __pycache__/
 Build/NuGet/
 
 Build/nuget.exe
+
+bin.*
