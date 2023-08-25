@@ -11,7 +11,7 @@ namespace MqttClient
     internal class INIHelp
     {
         [DllImport("kernel32.dll")]
-        private static extern int GetPrivateProfileString(string sesstion,string key,string def, byte[] retval,int size,string filePath);
+        private static extern int GetPrivateProfileString(string sesstion, string key, string def, byte[] retval, int size, string filePath);
 
         [DllImport("kernel32.dll")]
         private static extern int WritePrivateProfileString(string sesstion, byte[] key, byte[] val, string filePath);
@@ -24,7 +24,7 @@ namespace MqttClient
         {
             try
             {
-                WritePrivateProfileString(type, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(value),filepath);
+                WritePrivateProfileString(type, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(value), filepath);
                 return true;
             }
             catch
@@ -33,10 +33,11 @@ namespace MqttClient
             }
         }
 
-        public static string GetString(string type, string key) {
+        public static string GetString(string type, string key)
+        {
             byte[] buffer = new byte[1024];
-            int bufLen=GetPrivateProfileString(type,key,"",buffer,buffer.GetUpperBound(0),filepath);
-            string s=Encoding.UTF8.GetString(buffer,0,bufLen);
+            int bufLen = GetPrivateProfileString(type, key, "", buffer, buffer.GetUpperBound(0), filepath);
+            string s = Encoding.UTF8.GetString(buffer, 0, bufLen);
             return s;
         }
 

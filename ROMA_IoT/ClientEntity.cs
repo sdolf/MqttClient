@@ -17,8 +17,8 @@ namespace MqttClient
 
         // 连接检查时间间隔，最小值/默认值为5秒
         public double ReconnectInterval
-        { 
-            get => INIHelp.GetDouble("MqttClient", "reconnectInterval")> minTime ? INIHelp.GetDouble("MqttClient", "reconnectInterval"): defaultTime;
+        {
+            get => INIHelp.GetDouble("MqttClient", "reconnectInterval") > minTime ? INIHelp.GetDouble("MqttClient", "reconnectInterval") : defaultTime;
         }
 
         //连接、重连、发布、订阅等操作的超时时间，最小值/默认值为5秒
@@ -28,12 +28,12 @@ namespace MqttClient
         }
 
         // 日志输出级别，默认值为info
-        public int LogLevel 
-        { 
-            get 
+        public int LogLevel
+        {
+            get
             {
                 string str = INIHelp.GetString("MqttClient", "logLevel").ToLower();
-                int logLevel=3;
+                int logLevel = 4;
                 if (str == "none")
                 {
                     logLevel = 0;
@@ -55,7 +55,7 @@ namespace MqttClient
                     logLevel = 4;
                 }
                 return logLevel;
-            } 
+            }
         }
     }
 }

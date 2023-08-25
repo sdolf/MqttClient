@@ -12,25 +12,25 @@ namespace MqttClient
     // 证书信息在wiki中可以找到，注：c#语言只验证根证书，中间证书和服务器证书没有用，如需要使用非ssl连接，保持证书配置项为空即可
     internal class ServerEntity
     {
-        public string Adrress 
-        { 
-            get => String.IsNullOrEmpty(INIHelp.GetString("MqttServer", "address")) ? "127.0.0.1" : INIHelp.GetString("MqttServer", "address"); 
+        public string Adrress
+        {
+            get => String.IsNullOrEmpty(INIHelp.GetString("MqttServer", "address")) ? "127.0.0.1" : INIHelp.GetString("MqttServer", "address");
         }
 
-        public int Port 
-        { 
+        public int Port
+        {
             get => INIHelp.GetInt("MqttServer", "port") < 1000 ? 1883 : INIHelp.GetInt("MqttServer", "port");
         }
 
         // 配置的所有信任的CA根证书文件
-        public string[] CaCertificates 
-        { 
-            get 
+        public string[] CaCertificates
+        {
+            get
             {
                 string caCertificatePaths = INIHelp.GetString("MqttServer", "caCertificates");
                 string[] caCertificatePathsArr = caCertificatePaths.Split(",;".ToCharArray());
                 return caCertificatePathsArr;
-            } 
+            }
         }
 
         // 把所有CA根证书文件读进来用做证书链验证
@@ -50,12 +50,12 @@ namespace MqttClient
                         isTls = true;
                         Logger.Debug($"trust CA certificate loaded from file: {caCertificatePath}");
                     }
-                    else 
+                    else
                     {
                         Logger.Warn($"trust CA certificate file not exist: {caCertificatePath}");
                     }
                 }
-                if (isTls) 
+                if (isTls)
                 {
                     return rootCertificateTrust;
                 }

@@ -16,11 +16,11 @@ namespace MqttClient
     internal class MqttClient
     {
         // 设备配置参数：客户端id、用户名、密码等
-        private readonly DeviceEntity device=new DeviceEntity();
+        private readonly DeviceEntity device = new DeviceEntity();
         // 服务器配置参数：地址、端口、证书等
-        private readonly ServerEntity server=new ServerEntity();
+        private readonly ServerEntity server = new ServerEntity();
         // 客户端配置参数：连接超时、重连时间、日志级别等
-        private readonly ClientEntity client=new ClientEntity();
+        private readonly ClientEntity client = new ClientEntity();
         // mqtt客户端
         private readonly MqttFactory mqttFactory;
         private readonly IMqttClient mqttClient;
@@ -30,7 +30,8 @@ namespace MqttClient
         //This is a helper class to allow verifying a root CA separately from the Windows root store
         private readonly RootCertificateTrust rootCertificateTrust;
 
-        public MqttClient() {
+        public MqttClient()
+        {
             if (Logger.getEventLogger() != null)
             {
                 mqttFactory = new MqttFactory(Logger.getEventLogger());
@@ -45,9 +46,9 @@ namespace MqttClient
             mqttClient.ApplicationMessageReceivedAsync += ProcessMessage;
             mqttClientOptionsbuilder = new MqttClientOptionsBuilder()
                 .WithCleanSession(true)
-                .WithTcpServer(server.Adrress,server.Port)
+                .WithTcpServer(server.Adrress, server.Port)
                 .WithClientId(device.ClientId)
-                .WithCredentials(device.UserName,device.Password)
+                .WithCredentials(device.UserName, device.Password)
                 .WithKeepAlivePeriod(TimeSpan.FromSeconds(60));
 
             //ssl相关配置：只有配置有服务端效证书时使用ssl连接
@@ -76,8 +77,9 @@ namespace MqttClient
                 });
                 Logger.Info("TLS enabled");
             }
-            else {
-                if(server.CaCertificates != null && server.CaCertificates.Length>0)
+            else
+            {
+                if (server.CaCertificates != null && server.CaCertificates.Length > 0)
                 {
                     Logger.Warn("failed to load trust CA certificate from file");
                 }
@@ -118,7 +120,8 @@ namespace MqttClient
                                 Logger.Debug("connection is ok");
                             }
                         }
-                        catch (OperationCanceledException) {
+                        catch (OperationCanceledException)
+                        {
                             Logger.Error($"connect timeout to server: {server.Adrress}:{server.Port}");
                         }
                         catch (Exception ex)
@@ -137,18 +140,23 @@ namespace MqttClient
         }
 
         // 订阅topic
-        private async Task SubscribedAsyncs(string topic) {
-            try {
+        private async Task SubscribedAsyncs(string topic)
+        {
+            try
+            {
                 await mqttClient.SubscribeAsync(topic);
                 Logger.Info($"subscribe success: topic={topic}");
-            }catch(Exception ex) {
-                Logger.Warn("error while subscribing:"+ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("error while subscribing:" + ex);
             }
         }
 
         // 处理接收到的消息：业务逻辑可放在些处
-        private Task ProcessMessage(MqttApplicationMessageReceivedEventArgs arg) {
-            try 
+        private Task ProcessMessage(MqttApplicationMessageReceivedEventArgs arg)
+        {
+            try
             {
                 string topic = arg.ApplicationMessage.Topic;
                 string msg = arg.ApplicationMessage.ConvertPayloadToString();
@@ -164,24 +172,25 @@ namespace MqttClient
                 // 在消息处理方法中发送消息，建议在线程池中运行
                 Task.Run(() => PublishMessageAsyncs(replyTopic, replyMsg));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Logger.Error("error while processing income message:"+ex);
+                Logger.Error("error while processing income message:" + ex);
             }
             return Task.CompletedTask;
         }
 
         // 发送消息：超时时间为client.ConnectTimeout
-        private async Task PublishMessageAsyncs(string topic, string message) {
+        private async Task PublishMessageAsyncs(string topic, string message)
+        {
             try
             {
-                var msg=new MqttApplicationMessageBuilder()
+                var msg = new MqttApplicationMessageBuilder()
                     .WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce)
                     .WithTopic(topic)
                     .WithPayload(message)
                     .Build();
                 CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(client.ConnectTimeout));
-                await mqttClient.PublishAsync(msg,cts.Token);
+                await mqttClient.PublishAsync(msg, cts.Token);
                 Logger.Info($"message published: topic={topic},message={message}");
             }
             catch (Exception ex)

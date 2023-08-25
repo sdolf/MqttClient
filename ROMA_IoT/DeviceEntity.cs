@@ -13,7 +13,7 @@ namespace MqttClient
 
         public string ClientId { get => INIHelp.GetString("MqttDevice", "clientId"); }
 
-        public string DeviceId { get => INIHelp.GetString("MqttDevice", "deviceId");  }
+        public string DeviceId { get => INIHelp.GetString("MqttDevice", "deviceId"); }
 
         public string UserName { get => INIHelp.GetString("MqttDevice", "userName"); }
 
