@@ -29,6 +29,7 @@ namespace MqttClient
             }
             catch
             {
+                Logger.Warn($"set value failed: type={type}, key={key}, value={value}");
                 return false;
             }
         }
@@ -52,6 +53,7 @@ namespace MqttClient
             }
             catch
             {
+                Logger.Warn($"get double failed: type={type}, key={key}, string={s}, return 0 instead");
                 return 0;
             }
         }
@@ -67,6 +69,7 @@ namespace MqttClient
             }
             catch
             {
+                Logger.Warn($"get int failed: type={type}, key={key}, string={s}, return 0 instead");
                 return 0;
             }
         }
